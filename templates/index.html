@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}}</title>
+</head>
+<body>
+    <form action="/submit" method="post" >
+        <label for="1">Nhập số của bạn vào đây</label>
+        <input id="1" type="text" name="myInput">
+        <input type="submit" value="Submit">
+    </form>
+    <h1>Số của bạn là : {{.value}}</h1>
+</body>
+</html>

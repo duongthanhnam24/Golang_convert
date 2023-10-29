@@ -2,20 +2,27 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	var input int
-	fmt.Print("Nhập số: ")
-	fmt.Scan(&input)
+func landingpage(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title": "Trang chủ", "value": "...",
+	})
+}
 
-	// number, err := strconv.Atoi(input)
-	// if err != nil {
-	// 	fmt.Println("Lỗi: Không thể chuyển đổi chuỗi thành số")
-	// 	return
-	// }
-	// numberinit := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	number := input
+func submit(c *gin.Context) {
+	inputValue := c.PostForm("myInput")
+	number, err := strconv.Atoi(inputValue)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "error.html", gin.H{
+			"message": "Vui lòng nhập một số nguyên.",
+		})
+		return
+	}
 
 	digits := []int{}
 	if number == 0 {
@@ -34,8 +41,7 @@ func main() {
 		case 0:
 			text = append([]string{"Không"}, text...)
 		case 1:
-			fmt.Println("Một")
-			text = append([]string{"Không"}, text...)
+			text = append([]string{"Một"}, text...)
 
 		case 2:
 			text = append([]string{"Hai"}, text...)
@@ -79,4 +85,16 @@ func main() {
 
 		// return fmt.Printf("%v %v", text[i], text[j])
 	}
+	c.HTML(http.StatusOK, "result.html", gin.H{
+		"title": "Kết Quả", "value": text,
+	})
+}
+func main() {
+
+	router := gin.Default()
+	router.LoadHTMLGlob("templates/*")
+	router.GET("/", landingpage)
+	router.POST("/submit", submit)
+
+	router.Run(":8080")
 }
